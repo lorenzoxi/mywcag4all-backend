@@ -2,8 +2,8 @@ export interface CreateUserDto {
   name: string;
   surname: string;
   username: string;
-  student_id: string;
+  studentId: string;
   email: string;
   password: string;
-  is_admin: boolean;
+  isAdmin: boolean;
 }

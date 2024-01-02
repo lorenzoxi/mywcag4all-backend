@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument, Types, Schema as MongooseSchema } from 'mongoose';
 
 export type CriterionDocument = HydratedDocument<Criterion>;
 
-@Schema({ id: true, timestamps: true })
+@Schema({ id: true })
 export class Criterion {
 
   @Prop({ required: true })
-  index: number;
+  index: string;
 
   @Prop({ required: true })
   title: string;
@@ -15,8 +15,23 @@ export class Criterion {
   @Prop({ required: true })
   description: string;
 
-  @Prop()
-  level: string;
+  @Prop({ required: true, default: "" })
+  linkApply: string;
+
+  @Prop({ required: true, default: "" })
+  linkUnderstanding: string;
+
+  @Prop({ required: true })
+  wcagLevel: string;
+
+  @Prop({ required: true, default: true })
+  isApplicable?: boolean;
+
+  @Prop({ required: true, default: false })
+  isMet?: boolean;
+
+  @Prop({ required: true, default: [], type: MongooseSchema.Types.Array })
+  testsToMet?: [String]
 }
 
 export const CriterionSchema = SchemaFactory.createForClass(Criterion);

@@ -7,12 +7,12 @@ import { Section } from 'src/modules/section/entities/section.schema';
 export class UpdateWebsiteDto {
   name: string;
   url: string;
-  is_public: boolean;
+  isPublic: boolean;
 }
 
 export class UpdateWebsiteTestDto {
-  is_passed: boolean;
-  is_applicable: boolean;
+  isMet: boolean;
+  isApplicable: boolean;
 }
 
 export class UpdateWebsiteTestsDto {
@@ -36,6 +36,6 @@ export class UpdateWebsiteSectionssDto {
 }
 
 export class UpdateWebsiteCriterionDto {
-  is_passed: boolean;
-  is_applicable: boolean;
+  isMet: boolean;
+  isApplicable: boolean;
 }

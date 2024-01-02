@@ -7,7 +7,7 @@ export type GuidelineDocument = HydratedDocument<Guideline>;
 @Schema({ id: true, timestamps: true })
 export class Guideline {
   @Prop({ required: true, unique: true })
-  index: number;
+  index: string;
 
   @Prop({ required: true, unique: true })
   title: string;
@@ -15,13 +15,19 @@ export class Guideline {
   @Prop({ required: true })
   description: string;
 
+  @Prop({ required: true, default: "" })
+  linkApply: string;
+
+  @Prop({ required: true, default: "" })
+  linkUnderstanding: string;
+
   @Prop({ required: true, default: true })
-  is_applicable: boolean;
+  isApplicable?: boolean;
 
   @Prop({ required: true, default: false })
-  is_passed: boolean;
+  isMet?: boolean;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Criterion' }] })
+  @Prop({ type: mongoose.Schema.Types.Array })
   criteria: Criterion[];
 }
 

@@ -11,8 +11,7 @@ import {
 } from './dto/update-website.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Website, WebsiteDocument } from 'src/modules/website/entities/website.schema';
-import { Model } from 'mongoose';
-import { UpdateWebsiteCriteriaDto } from './dto/update-website.dto';
+import { Model, Types } from 'mongoose';
 import { GetWebsitesQueryDto } from './dto/read-website.dts';
 
 @Injectable()
@@ -22,13 +21,12 @@ export class WebsiteService {
   ) { }
 
   async create(website: CreateWebsiteDto) {
-    return await this.model.create([{ ...website }], {
-      validateBeforeSave: true,
-    });
+    const newWebsite = await this.model.create([{ ...website, user: new Types.ObjectId(`${website.user}`) }]);
+    return newWebsite;
   }
 
   async findAll(query: GetWebsitesQueryDto) {
-    if (query.projection) {   //TODO: refactor this
+    if (query.projection) {
       return await this.model.find({}).select("-tests -user -sections").exec();
     } else {
       return await this.model.find({}).exec();
@@ -47,9 +45,24 @@ export class WebsiteService {
     return await this.model.find({ _id: id }).exec();
   }
 
+  async findResultsById(id: string) {
+    return await this.model.findById({ _id: id }).select("results -_id").exec();
+  }
+
   async findByUserId(id: string) {
-    return await this.model.find({ 'user': id })
-      .exec();
+    const res = await this.model.find({ 'user': new Types.ObjectId(`${id}`) }).populate({
+      path: 'tests',
+      populate: {
+        path: 'tools',
+        model: 'Tool',
+        populate: {
+          path: 'license',
+          model: 'License'
+        }
+      }
+    }).exec();
+
+    return res;
   }
 
   async update(id: string, payload: UpdateWebsiteDto) {
@@ -58,7 +71,7 @@ export class WebsiteService {
 
   async updateTest(id: string, test_index: string, payload: UpdateWebsiteTestDto) {
     return await this.model.findOneAndUpdate(
-      { _id: id },
+      { _id: new Types.ObjectId(`${id}`) },
       { $set: { 'tests.$[i]': { ...payload } } },
       {
         arrayFilters: [{ 'i.index': test_index }],
@@ -67,16 +80,52 @@ export class WebsiteService {
     );
   }
 
-  async updateTests(id: string, tests: UpdateWebsiteTestsDto) {
-    return await this.model.findOneAndUpdate(
-      { _id: id },
-      { tests },
-    );
+  async updateTests(id: string, newTests: UpdateWebsiteTestsDto) {
+    const tests = await this.model.findOneAndUpdate(
+      { _id: new Types.ObjectId(`${id}`) },
+      { tests: newTests },
+    ).select("tests").exec();
+
+
+    const sections = await this.model.findById(id).select("sections").exec();
+
+    sections.sections.forEach(section => {
+      section.guidelines.forEach(guideline => {
+
+        guideline.criteria.forEach(criterion => {
+
+          const testsToMet = criterion.testsToMet;
+
+          let isMet = true;
+          testsToMet.forEach(testToMet => {
+
+            const testIndex = (tests.tests as any).findIndex(test => test.index === testToMet);
+
+            const test = tests.tests[testIndex];
+            if (test.isMet === false) {
+              isMet = false;
+            }
+          });
+
+          if(isMet){
+            criterion.isMet = true;
+          }
+
+        });
+      });
+    });
+
+    
+    sections.markModified('sections')
+    sections.save();
+
+    return tests;
+
   }
 
   async updateSections(id: string, sections: UpdateWebsiteSectionssDto) {
-    return await this.model.findOneAndUpdate(
-      { _id: id },
+    const newSections = await this.model.findOneAndUpdate(
+      { _id: new Types.ObjectId(`${id}`) },
       { sections },
     );
   }
@@ -89,7 +138,7 @@ export class WebsiteService {
     payload: UpdateWebsiteCriterionDto,
   ) {
     return await this.model.findOneAndUpdate(
-      { _id: id },
+      { _id: new Types.ObjectId(`${id}`) },
       { $set: { 'sections.$[i].guidelines.$[j].criteria.$[k]': { ...payload } } },
       {
         arrayFilters: [
@@ -115,7 +164,6 @@ export class WebsiteService {
   }
 
   async retriveUsersByWebsitesScore() {
-    //retrieve users by score in the Website collection //TODO:
     return await this.model.aggregate([
       {
         $group: {
@@ -129,7 +177,8 @@ export class WebsiteService {
         },
       },
     ]);
-
   }
+
+
 
 }

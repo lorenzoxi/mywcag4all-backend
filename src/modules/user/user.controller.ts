@@ -17,18 +17,23 @@ export class UserController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    console.log('UserController: create');
     return this.userService.create(createUserDto);
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.userService.findAll();
   }
 
+  @Get('ranking')
+  //@UseGuards(AuthGuard('jwt'))
+  ranking() {
+    return this.userService.retrieveUsersByTotalScore();
+  }
+
   @Delete('')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   deleteUser(deleteUserDto: DeleteUserDTO) {
     return this.userService.deleteUser(deleteUserDto);
   }

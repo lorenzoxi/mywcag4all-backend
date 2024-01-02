@@ -13,6 +13,7 @@ import { WebsiteModule } from './modules/website/website.module';
 import { GuidelineModule } from './modules/guideline/guideline.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ToolClassModule } from './modules/tool-class/tool-class.module';
+import { LicensesModule } from './modules/licenses/licenses.module';
 
 
 @Module({
@@ -33,6 +34,7 @@ import { ToolClassModule } from './modules/tool-class/tool-class.module';
     WebsiteModule,
     AuthModule,
     ToolClassModule,
+    LicensesModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -45,5 +45,7 @@ package-lock.json
 webapp
 dist/
 data/
-test/
+./test/
 .DS_Store
+
+data/draft/

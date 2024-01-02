@@ -68,4 +68,51 @@ export class UserService {
     }
   }
 
+  async retrieveUsersByTotalScore() {
+
+    const ranking = await this.model.aggregate(
+      [
+        {
+          $lookup: {
+            from: "websites",
+            localField: "_id",
+            foreignField: "user",
+            as: "websites"
+          }
+        },
+        {
+          $unwind: "$websites"
+        },
+        {
+          $group: {
+            _id: "$_id",
+            totalScore: { $sum: "$websites.score" },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $sort: { totalScore: -1 }
+        },
+        {
+          $project: {
+            _id: 1,
+            totalScore: 1,
+            count: 1,
+          }
+        }
+      ]
+    )
+
+    const rankingPopulated = await this.model.populate(ranking, { path: "_id", select: '-_id username' })
+
+    const renamedRanking = rankingPopulated.map((item: any) => {
+      return {
+        user: item._id,
+        totalScore: item.totalScore,
+        count: item.count
+      };
+    });
+    return renamedRanking
+  }
+
 }

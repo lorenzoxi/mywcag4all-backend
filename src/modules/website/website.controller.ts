@@ -29,43 +29,43 @@ export class WebsiteController {
   constructor(private readonly websiteService: WebsiteService) { }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   create(@Body() createWebsiteDto: CreateWebsiteDto) {
     return this.websiteService.create(createWebsiteDto);
   }
 
-
   @Get()
+  //@UseGuards(AuthGuard('jwt'))
   findAll(@Query() query: GetWebsitesQueryDto) {
     return this.websiteService.findAll(query);
   }
 
+  @Get(':id')
+  //@UseGuards(AuthGuard('jwt'))
+  findById(@Param('id') id: string) {
+    return this.websiteService.findOne(id);
+  }
+
   @Get('sort_by/score:order')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   findAllAndSort(@Param('order') ordering_type: string) {
     return this.websiteService.findAllAndOrder(ordering_type);
   }
 
   @Get('user/:id')
-  @UseGuards(AuthGuard('jwt'))
-  findById(@Param('id') id: string) {
-    return this.websiteService.findOne(id);
-  }
-
-  @Get('user/:id')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   findByUserId(@Param('id') id: string) {
     return this.websiteService.findByUserId(id);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   payload(@Param('id') id: string, @Body() updateWebsiteDto: UpdateWebsiteDto) {
     return this.websiteService.update(id, updateWebsiteDto);
   }
 
   @Patch(':id/tests/:test_index')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   updateTest(
     @Param('id') id: string,
     @Param('test_index') test_index: string,
@@ -75,15 +75,23 @@ export class WebsiteController {
   }
 
   @Get(':id/tests')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   findAllTests(
     @Param('id') id: string,
   ) {
     return this.websiteService.findAllTests(id);
   }
 
+  @Get(':id/results')
+  //@UseGuards(AuthGuard('jwt'))
+  findResults(
+    @Param('id') id: string,
+  ) {
+    return this.websiteService.findResultsById(id);
+  }
+
   @Patch(':id/sections/:section_index/guidelines/:guideline_index/criteria/:criterion_index')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   updateCriterion(
     @Param('id') id: string,
     @Param('section_index') section_index: string,
@@ -95,31 +103,31 @@ export class WebsiteController {
   }
 
   @Put(':id/tests')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   updateTests(@Param('id') id: string, @Body() updateWebsiteTestsDto: UpdateWebsiteTestsDto) {
     return this.websiteService.updateTests(id, updateWebsiteTestsDto);
   }
 
   @Put(':id/sections')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   updateSections(@Param('id') id: string, @Body() updateWebsiteSectionssDto: UpdateWebsiteSectionssDto) {
     return this.websiteService.updateSections(id, updateWebsiteSectionssDto);
   }
 
   @Patch(':id/level')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   updateLevel(@Param('id') id: string, @Body() updateWebsiteLevelDto: UpdateWebsiteLevelDto) {
     return this.websiteService.updateLevel(id, updateWebsiteLevelDto);
   }
 
   @Patch(':id/score')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   updateScore(@Param('id') id: string, @Body() payload: UpdateWebsiteScoreDto) {
     return this.websiteService.updateScore(id, payload);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   remove(@Param('id') id: string) {
     return this.websiteService.removeById(id);
   }

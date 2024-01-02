@@ -7,13 +7,14 @@ import { Model } from 'mongoose';
 export class SectionService {
   constructor(
     @InjectModel(Section.name) private readonly model: Model<SectionDocument>,
-  ) {}
+  ) { }
 
   async findAll() {
     return await this.model.find().exec();
   }
 
-  async findOne(index: number) {
+
+  async findOne(index: string) {
     return await this.model.findOne({ index: index }).exec();
   }
 }

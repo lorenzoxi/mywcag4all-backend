@@ -18,7 +18,7 @@ export class Myth {
   password: string;
 
   @Prop({ required: true })
-  is_admin: boolean;
+  isAdmin: boolean;
 }
 
 export const MythSchema = SchemaFactory.createForClass(Myth);

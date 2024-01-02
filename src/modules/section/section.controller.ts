@@ -2,12 +2,18 @@ import {
   Controller,
   Get,
   Param,
+  Query,
 } from '@nestjs/common';
 import { SectionService } from './section.service';
 
 @Controller('sections')
 export class SectionController {
-  constructor(private readonly sectionService: SectionService) {}
+  constructor(private readonly sectionService: SectionService) { }
+
+  // @Get()
+  // findAll() {
+  //   return this.sectionService.findAll();
+  // }
 
   @Get()
   findAll() {
@@ -16,6 +22,6 @@ export class SectionController {
 
   @Get(':index')
   findOne(@Param('index') index: string) {
-    return this.sectionService.findOne(+index);
+    return this.sectionService.findOne(index);
   }
 }

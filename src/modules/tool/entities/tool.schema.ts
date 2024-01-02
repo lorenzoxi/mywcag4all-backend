@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, SchemaType, Types } from 'mongoose';
+import { License } from 'src/modules/licenses/entities/license.schema';
+import { ToolClass } from 'src/modules/tool-class/entities/tool.schema';
 
 export type ToolDocument = HydratedDocument<Tool>;
 
@@ -20,17 +22,17 @@ export class Tool {
   @Prop({ required: true })
   url: string;
 
-  @Prop({ required: true })
-  license: string;
+  @Prop({ required: true, type: Types.ObjectId, ref: 'License' })
+  license: License;
 
-  @Prop()
-  source_code: string;
+  @Prop({ required: false })
+  sourceCode: string;
 
-  @Prop()
+  @Prop({ required: false })
   tags: string[];
 
-  @Prop()
-  types: string[];
+  @Prop({ required: true, type: [Types.ObjectId], ref: 'ToolClass' })
+  classes: ToolClass[];
 }
 
 export const ToolSchema = SchemaFactory.createForClass(Tool);

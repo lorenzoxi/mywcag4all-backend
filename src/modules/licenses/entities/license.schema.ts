@@ -6,7 +6,7 @@ export type LicenseDocument = HydratedDocument<License>;
 @Schema({ id: true, timestamps: true })
 export class License {
   @Prop({ required: true })
-  name: number;
+  name: string;
 
   @Prop({ required: true })
   url: string;

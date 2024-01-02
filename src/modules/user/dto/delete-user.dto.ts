@@ -4,5 +4,5 @@ export class DeleteUserDTO {
   username: string;
   email: string;
   password: string;
-  is_admin: boolean = false;
+  isAdmin: boolean = false;
 }

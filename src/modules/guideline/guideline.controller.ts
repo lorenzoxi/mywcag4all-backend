@@ -11,7 +11,7 @@ export class GuidelineController {
   constructor(private readonly guidelineService: GuidelineService) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.guidelineService.findAll();
   }
